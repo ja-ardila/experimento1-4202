@@ -1,4 +1,5 @@
 Para probarlo
+- Tener RabbitMQ instalado y corriendo
 - Crear venv
 - Instalar librerías necesarias
 - Correr los dos microservicios:
