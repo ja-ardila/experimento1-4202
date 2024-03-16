@@ -1,5 +1,6 @@
 from flask import Flask
 import pika
+import ssl
 from sqlalchemy import create_engine, Column, Integer, String, DateTime, Boolean
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
@@ -23,7 +24,8 @@ engine = create_engine('sqlite:///eventos.db')
 Base.metadata.create_all(engine)
 Session = sessionmaker(bind=engine)
 
-connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+url_parameters = pika.URLParameters("amqp://admin:admin@127.0.0.1:5672/%2F")
+connection = pika.BlockingConnection(url_parameters)
 channel = connection.channel()
 channel.queue_declare(queue='alertas')
 
@@ -59,7 +61,7 @@ if __name__ == '__main__':
     thread.start()
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('-p', '--port', type=int, default=5000, help='Port to run the server on')
+    parser.add_argument('-p', '--port', type=int, default=5001, help='Port to run the server on')
     args = parser.parse_args()
     
     # Ejecutar la aplicación Flask en el hilo principal
